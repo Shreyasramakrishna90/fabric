@@ -37,6 +37,8 @@ elif [ "$MODE" == "test" ]; then
 
 elif [ "$MODE" == "update" ]; then
 # for some reason must use 172 address, update fails when using hostname
+  fab -H $1:2222 runCommand:'sudo apt-get remove ‘riaps-*’'
+
   fab -H $1:2222 runCommand:'sudo apt autoclean'
 
   fab -H $1:2222 runCommand:'sudo apt autoremove'
@@ -52,5 +54,10 @@ elif [ "$MODE" == "update" ]; then
   fab -H $1:2222 runCommand:'sudo apt update'
 
   fab -H $1:2222 runCommand:"sudo apt -y install 'riaps-*'"
+
+elif [ "$MODE" == "version"]; then
+
+  fab -H $1:2222 runCommand:'dpkg -l | grep riaps'
+  #statements
 
 fi

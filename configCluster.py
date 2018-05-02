@@ -1,7 +1,5 @@
 from config import *
 import fabric.api as fabi
-groupRAW = 'ip2_2'
-group = 'c2_2'
 
 fabi.env.password = 'riaps'
 fabi.env.sudo_password = 'riaps'
@@ -72,9 +70,15 @@ def test():
 	fabi.run('sleep 30')
 	fabi.run('echo 0 >> /sys/class/leds/beaglebone\:green\:usr2/brightness')
 
-@fabi.parallel
+#@fabi.parallel
 def update():
-	fabi.sudo('rm -rf /var/log/*')
-	#fabi.run('./riaps_install_bbb.sh 2>&1 | tee install-bbb-riaps.log')
+	fabi.sudo('cp /etc/network/interfaces /etc/network/interfaces.bak')
+	fabi.sudo('sudo apt-get -y remove "riaps-*"')
+	fabi.sudo('sudo apt autoclean')
+	fabi.sudo('sudo apt autoremove')
 	fabi.sudo('apt update')
-	fabi.sudo("apt install 'riaps-*'")
+	fabi.sudo("apt -y install 'riaps-*'")
+
+@fabi.parallel
+def version():
+	fabi.run("'dpkg -l | grep riaps'")
